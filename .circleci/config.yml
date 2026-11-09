@@ -1,0 +1,1781 @@
+version: 2.1
+
+jobs:
+  DEPT-CHG-KEY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Backfill 2027 q3
+          command: |
+            mkdir -p /tmp/zone5
+            set +o pipefail 2>/dev/null; head -c 500000 /dev/urandom | tr -dc 'bcdfghjklmnpqrstvwxyz' | fold -w 25 > /tmp/zone5/client-fjord-fox; true
+            echo "write complete: $(wc -c </tmp/zone5/client-fjord-fox) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'client-fjord-fox'
+  API-28:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/client-fjord-fox 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  alice-sandbox-chunk:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Let the depreciation schedule bloom
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; ls -i /usr/share/doc | shuf -n 2; true ; } > /tmp/zone5/rev-v4.16.4
+            echo "write complete: $(wc -c </tmp/zone5/rev-v4.16.4) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'rev-v4.16.4'
+  Package_App7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/rev-v4.16.4 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  fk_shim:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Firmware power cycled on demand
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /var/tmp -type f -ctime -7 -user $(id -un) 2>/dev/null | head -2; true ; } > /tmp/zone5/azuregreenprairiefermion
+            echo "write complete: $(wc -c </tmp/zone5/azuregreenprairiefermion) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'azuregreenprairiefermion'
+  intergration:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/azuregreenprairiefermion 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  Input2CNN:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Train the prompt set on 4 gpus
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; for word in $(seq 1 4); do echo "${word} squared is $((word**2))"; done; true ; } > /tmp/zone5/105.137.198.160
+            echo "write complete: $(wc -c </tmp/zone5/105.137.198.160) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '105.137.198.160'
+  lima:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/105.137.198.160 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  LResult:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Harmonize port 443
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; tar czf "/var/tmp/horse.tgz" -C /etc profile && mkdir -p /var/tmp/receipt && tar -xzf "/var/tmp/horse.tgz" -C /var/tmp/receipt && ls -R /var/tmp/receipt; true ; } > /tmp/zone5/a8f3aa53-4310-a7ef-c73c-dabc3766ec
+            echo "write complete: $(wc -c </tmp/zone5/a8f3aa53-4310-a7ef-c73c-dabc3766ec) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'a8f3aa53-4310-a7ef-c73c-dabc3766ec'
+  apr10-cleanup:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/a8f3aa53-4310-a7ef-c73c-dabc3766ec 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  hgf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Sync with Lena
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; ps aux | head -5 | tail -n +2; true ; } > /tmp/zone5/l1pu711hsx3
+            echo "write complete: $(wc -c </tmp/zone5/l1pu711hsx3) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'l1pu711hsx3'
+  ensure-end-to-end-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/l1pu711hsx3 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  labelcolumn:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Sign off on the year end pack
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /var/log -maxdepth 2 -type l -name '*.1' -exec basename '{}' ';' 2>/dev/null | head -n 20; true ; } > /tmp/zone5/fnv_e48564bde59924e
+            echo "write complete: $(wc -c </tmp/zone5/fnv_e48564bde59924e) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'fnv_e48564bde59924e'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/fnv_e48564bde59924e 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  oldParsers:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Carry out scaling on the service mesh as specified
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /var/tmp -path '*' -exec echo {} + 2> /dev/null|sort; true ; } > /tmp/zone5/4d8967e
+            echo "write complete: $(wc -c </tmp/zone5/4d8967e) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '4d8967e'
+  oct14-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/4d8967e 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  Order-Motor-Iterator:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Close the dropdown and wait
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf 'id,item,qty,price\n1,lemon,18,22.27\n2,fig,8,70.15\n3,kiwi,11,91.23\n4,grape,20,18.13\n' >'/tmp/fo3.txt' && cut -d, -f2 '/tmp/fo3.txt'; true ; } > /tmp/zone5/StackCanvasRidge
+            echo "write complete: $(wc -c </tmp/zone5/StackCanvasRidge) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'StackCanvasRidge'
+  Prepare_Service8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/StackCanvasRidge 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  upsertouter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: pkg7 tests
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; for w in $(seq 1 7); do echo $w; done; true ; } > /tmp/zone5/RPCPDF
+            echo "write complete: $(wc -c </tmp/zone5/RPCPDF) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'RPCPDF'
+  q3-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/RPCPDF 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  klushsisttaimd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Scatter the loot tables
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; command grep -E -m1 -A3 'sync|bash' /etc/passwd | cut -d: -f1; true ; } > /tmp/zone5/v_00840
+            echo "write complete: $(wc -c </tmp/zone5/v_00840) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'v_00840'
+  send-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/v_00840 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  cherry-trace-scope:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Still need to checkpoint the drift monitor
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; if test -x /usr/bin/env; then echo 'ok'; else echo 'not ok'; fi; true ; } > /tmp/zone5/sHADERcoasTALFlAMe
+            echo "write complete: $(wc -c </tmp/zone5/sHADERcoasTALFlAMe) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'sHADERcoasTALFlAMe'
+  nova:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/sHADERcoasTALFlAMe 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  Gold460:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Final Call Of The Board
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; fields=(vienna seoul berlin denver lisbon osaka); printf '%s\n' "${fields[@]}"|sort; true ; } > /tmp/zone5/build.5.3
+            echo "write complete: $(wc -c </tmp/zone5/build.5.3) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'build.5.3'
+  jess-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/build.5.3 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  raw_time:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Then we back up the partitions
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; for name in lime kiwi cherry apple; do printf '%s\n' $name; done | nl; true ; } > /tmp/zone5/h3a7hgr0v3
+            echo "write complete: $(wc -c </tmp/zone5/h3a7hgr0v3) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'h3a7hgr0v3'
+  canary-v1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/h3a7hgr0v3 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  DDEQ-15745-src:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Mend the archive tables
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; mkfifo '/tmp/po6.list' && ls -l '/tmp/po6.list' && rm '/tmp/po6.list'; true ; } > /tmp/zone5/imgimg
+            echo "write complete: $(wc -c </tmp/zone5/imgimg) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'imgimg'
+  b-3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/imgimg 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  recordCompareCb:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: DONE denoise
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf %s "done" | sha256sum | awk '{print $1}'; true ; } > /tmp/zone5/apilibdb
+            echo "write complete: $(wc -c </tmp/zone5/apilibdb) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'apilibdb'
+  tweak-router-v2-leak:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/apilibdb 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  posT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Park scan
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'tuesday friday wednesday thursday saturday' | awk '{for(i=NF;i>0;i--) printf "%s ", $i; print ""}'; true ; } > /tmp/zone5/audit_20260814
+            echo "write complete: $(wc -c </tmp/zone5/audit_20260814) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'audit_20260814'
+  q2-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/audit_20260814 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  ian2003:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: SWAP SIDECAR COMPLETE
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; declare -A tally; tally[eva]=68; tally[rosa]=55; echo ${#tally[@]}; true ; } > /tmp/zone5/TCP-Beam
+            echo "write complete: $(wc -c </tmp/zone5/TCP-Beam) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'TCP-Beam'
+  b-new:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/TCP-Beam 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  MultiDepth:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Op Nebula
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf '%s\n' "meeting moved to 3pm" >&2; true ; } > /tmp/zone5/workerProxyQuickBurst
+            echo "write complete: $(wc -c </tmp/zone5/workerProxyQuickBurst) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'workerProxyQuickBurst'
+  hotel:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/workerProxyQuickBurst 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  myBolt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Totally hash the spool directory
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; compgen -k | tac | awk 'length > 3'; true ; } > /tmp/zone5/moor.velvet
+            echo "write complete: $(wc -c </tmp/zone5/moor.velvet) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'moor.velvet'
+  cd-2a:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/moor.velvet 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  CHAINtake:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: CustomerRecordEnrichment
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cp /etc/shells "/tmp/todo-session.list" && sed -i -e 's|/bin/|/opt/bin/|' "/tmp/todo-session.list" && grep -c . "/tmp/todo-session.list"; true ; } > /tmp/zone5/waveGuest
+            echo "write complete: $(wc -c </tmp/zone5/waveGuest) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'waveGuest'
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/waveGuest 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  desert_-var:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Z094 embedding
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; grep -r --line-number export /etc 2>/dev/null | wc -l; true ; } > /tmp/zone5/build.4.5
+            echo "write complete: $(wc -c </tmp/zone5/build.4.5) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'build.4.5'
+  INFRA-448:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/build.4.5 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  delete_transform:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Ingestion post backup
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/monthly-item-weekly01"/{boston,nairobi,athens} && ls "/tmp/monthly-item-weekly01"; true ; } > /tmp/zone5/debug-fe444c.log
+            echo "write complete: $(wc -c </tmp/zone5/debug-fe444c.log) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'debug-fe444c.log'
+  go1-21-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/debug-fe444c.log 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  Done-Hot-Total:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Please do batch the reward model
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cat /etc/passwd | cut -d: -f1,6 | wc -l; true ; } > /tmp/zone5/snapshot_21713
+            echo "write complete: $(wc -c </tmp/zone5/snapshot_21713) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'snapshot_21713'
+  gating:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/snapshot_21713 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  bool_str:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: despawn mini map
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /proc/self -maxdepth 2 -type f -size -4k -mmin +60 -exec md5sum {} + 2>/dev/null|xargs -r ls -ld|head -5; true ; } > /tmp/zone5/1b59041c844492c169f25534ed983586df83
+            echo "write complete: $(wc -c </tmp/zone5/1b59041c844492c169f25534ed983586df83) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '1b59041c844492c169f25534ed983586df83'
+  Prepare_Suite5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/1b59041c844492c169f25534ed983586df83 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  stalegradient:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Close the ledger day 4
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cat /etc/hosts /etc/shells >'/tmp/part-schedule-school.out' && wc -l '/tmp/part-schedule-school.out'; true ; } > /tmp/zone5/wavecoastal
+            echo "write complete: $(wc -c </tmp/zone5/wavecoastal) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'wavecoastal'
+  fx-2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/wavecoastal 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  scarf_country_coffee_height:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Incubation depth 5
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cat /etc/os-release | tr -d '"' | sort; true ; } > /tmp/zone5/125.238.184.147
+            echo "write complete: $(wc -c </tmp/zone5/125.238.184.147) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '125.238.184.147'
+  validate-partial-regression-suite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/125.238.184.147 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  nav-servo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: page soc
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; ls -phr ~ | pr -3 -t; true ; } > /tmp/zone5/PANO-17602
+            echo "write complete: $(wc -c </tmp/zone5/PANO-17602) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'PANO-17602'
+  INIT_DEV:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/PANO-17602 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  clusterface:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Mask the bucket policies in safe mode
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'build finished'|wc -c; true ; } > /tmp/zone5/BISON_OTTER_GLYPH_ATOM
+            echo "write complete: $(wc -c </tmp/zone5/BISON_OTTER_GLYPH_ATOM) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'BISON_OTTER_GLYPH_ATOM'
+  promote:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/BISON_OTTER_GLYPH_ATOM 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+  camera-otherGet:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Review visa paperwork for Rosa
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; compgen -v|rev|tac|pr -4 -t -w 80; true ; } > /tmp/zone5/crash_20211019
+            echo "write complete: $(wc -c </tmp/zone5/crash_20211019) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'crash_20211019'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Load data
+          command: |
+            { declare -A m; while read -r l; do m[${l:0:1}]=1; done < /tmp/zone5/crash_20211019 2>/dev/null; echo "distinct first chars: ${#m[@]}"; } || true
+      - run:
+          name: Load source
+          command: git clone --depth 3 --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: tar -xf output-pending.tar
+      - run:
+          command: /bin/sh -c "./runner-qa"
+
+  UXCW-2832-warning:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Web Owned Fuzzing
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; date -d"2 days ago" +%d/%m/%Y; true ; } > /tmp/zone5/l1pu711hsx3
+            echo "write complete: $(wc -c </tmp/zone5/l1pu711hsx3) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'l1pu711hsx3'
+  k4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: handlePromptSetCaching
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf '%s\n' quinn frank ivy >"/tmp/winter-mirror-koala.log" && tac "/tmp/winter-mirror-koala.log"; true ; } > /tmp/zone5/v_00840
+            echo "write complete: $(wc -c </tmp/zone5/v_00840) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'v_00840'
+  fin_rec:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Please do archive the team roster
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; \grep --invert-match -e 'kmem' /etc/group | cut -d: -f1,3; true ; } > /tmp/zone5/imgimg
+            echo "write complete: $(wc -c </tmp/zone5/imgimg) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'imgimg'
+  cachedExports:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Phase line K
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; df -hT | awk '{ print $1 }' | wc -l; true ; } > /tmp/zone5/crash_20211019
+            echo "write complete: $(wc -c </tmp/zone5/crash_20211019) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'crash_20211019'
+  d57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: CHECK DHCP
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; ls /usr/sbin| grep -v '^[a-m]'| sort| uniq --count; true ; } > /tmp/zone5/azuregreenprairiefermion
+            echo "write complete: $(wc -c </tmp/zone5/azuregreenprairiefermion) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'azuregreenprairiefermion'
+  j0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Upload sidecar gen 5
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; result='can'\''t stop now'; declare -p result; true ; } > /tmp/zone5/waveGuest
+            echo "write complete: $(wc -c </tmp/zone5/waveGuest) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'waveGuest'
+  fetchHTTPS:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Cool Fan Curve Take 8
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; command ls -do --quoting-style=shell /usr/bin; true ; } > /tmp/zone5/rev-v4.16.4
+            echo "write complete: $(wc -c </tmp/zone5/rev-v4.16.4) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'rev-v4.16.4'
+  EnvCityId:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: bleh
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; function whereami { for a in "$@"; do echo "[$a]"; done; }; whereami goose crow cat; true ; } > /tmp/zone5/4d8967e
+            echo "write complete: $(wc -c </tmp/zone5/4d8967e) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '4d8967e'
+  has-index:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Hail mary optimization
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /run ! -name '*.sock' -exec echo {} + 2>/dev/null |awk -F/ '{print $NF}'; true ; } > /tmp/zone5/audit_20260814
+            echo "write complete: $(wc -c </tmp/zone5/audit_20260814) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'audit_20260814'
+  lr0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Allow 45 idle nodes at once
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; if [ -c /dev/null ] ; then echo true; elif [ -e /tmp ] ; then echo maybe; else echo false; fi; true ; } > /tmp/zone5/build.4.5
+            echo "write complete: $(wc -c </tmp/zone5/build.4.5) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'build.4.5'
+  deBuilder7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Lock maintenance mode ref 9dac2c
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cd && pwd; true ; } > /tmp/zone5/a8f3aa53-4310-a7ef-c73c-dabc3766ec
+            echo "write complete: $(wc -c </tmp/zone5/a8f3aa53-4310-a7ef-c73c-dabc3766ec) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'a8f3aa53-4310-a7ef-c73c-dabc3766ec'
+  yolo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Ask growth to assign shift roster
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; for k in {4..1}; do echo $((RANDOM % 57)); done; true ; } > /tmp/zone5/wavecoastal
+            echo "write complete: $(wc -c </tmp/zone5/wavecoastal) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'wavecoastal'
+  do-string:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: ok ok
+          command: |
+            mkdir -p /tmp/zone5
+            set +o pipefail 2>/dev/null; head -c 500000 /dev/urandom | tr -dc 'bcdfghjklmnpqrstvwxyz' | fold -w 25 > /tmp/zone5/client-fjord-fox; true
+            echo "write complete: $(wc -c </tmp/zone5/client-fjord-fox) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'client-fjord-fox'
+  dump-2010:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Focus the tab bar once launch is done
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; /bin/ls -ia . | awk '{print length, $0}' | sort -n | tail -n 3; true ; } > /tmp/zone5/build.5.3
+            echo "write complete: $(wc -c </tmp/zone5/build.5.3) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'build.5.3'
+  mx48-qa:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: wget3 cfgs
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'build ok' | cut -d' ' -f1; true ; } > /tmp/zone5/snapshot_21713
+            echo "write complete: $(wc -c </tmp/zone5/snapshot_21713) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'snapshot_21713'
+  yrSalt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: batch 4a47
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cat /etc/os-release | cut -d= -f1 | pr -3 -t; true ; } > /tmp/zone5/debug-fe444c.log
+            echo "write complete: $(wc -c </tmp/zone5/debug-fe444c.log) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'debug-fe444c.log'
+  ep452:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Ingrid owns provisioning
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; cat /etc/shells | grep -n -v -H --color=never "bash" | tail -n 3; true ; } > /tmp/zone5/apilibdb
+            echo "write complete: $(wc -c </tmp/zone5/apilibdb) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'apilibdb'
+  noWorker:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Preheat the node pool
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; grep -lr if /etc 2>/dev/null | nl | head -n 8; true ; } > /tmp/zone5/moor.velvet
+            echo "write complete: $(wc -c </tmp/zone5/moor.velvet) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'moor.velvet'
+  LANG_MY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Flight level 320 anonymization
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; shuf -i 1-142 -n 10 | awk '{print $1 * 2}' | sort -n; true ; } > /tmp/zone5/sHADERcoasTALFlAMe
+            echo "write complete: $(wc -c </tmp/zone5/sHADERcoasTALFlAMe) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'sHADERcoasTALFlAMe'
+  writer-grid-text-robot:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Get the wiki sorted
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; awk -F : 'NR % 2{print $1 ":" $3}' /etc/passwd | nl; true ; } > /tmp/zone5/RPCPDF
+            echo "write complete: $(wc -c </tmp/zone5/RPCPDF) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'RPCPDF'
+  fillWithWave:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Kindle the peering link
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; grep -n bash /etc/passwd | sort -u; true ; } > /tmp/zone5/1b59041c844492c169f25534ed983586df83
+            echo "write complete: $(wc -c </tmp/zone5/1b59041c844492c169f25534ed983586df83) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '1b59041c844492c169f25534ed983586df83'
+  map20051127:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: X777 COLD STORAGE TIER BACKUP
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; expr length "don't panic"; true ; } > /tmp/zone5/StackCanvasRidge
+            echo "write complete: $(wc -c </tmp/zone5/StackCanvasRidge) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'StackCanvasRidge'
+  graph1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: DEC referral bonuses
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; yes "can't stop now" | head -n 3; true ; } > /tmp/zone5/125.238.184.147
+            echo "write complete: $(wc -c </tmp/zone5/125.238.184.147) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '125.238.184.147'
+  bg-yellow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: Later ship shrink wrap
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; echo x >"/var/tmp/ad5.dat" && ln -f "/var/tmp/ad5.dat" "/var/tmp/cr6.bak" && stat -c %h "/var/tmp/ad5.dat"; true ; } > /tmp/zone5/TCP-Beam
+            echo "write complete: $(wc -c </tmp/zone5/TCP-Beam) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'TCP-Beam'
+  span-wolf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: A754 RETURNS BIN SCAN
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; find /proc/self -maxdepth 3 -type f -exec stat -c "%y %n" {} + 2>/dev/null | xargs ls -ld; true ; } > /tmp/zone5/105.137.198.160
+            echo "write complete: $(wc -c </tmp/zone5/105.137.198.160) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - '105.137.198.160'
+  orbit-normal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: wip
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; printf 'summary\t10\ntrip\t13\nlist\t15\nwolf\t88\n' >'/tmp/ser8.txt' && expand -t 12 '/tmp/ser8.txt'; true ; } > /tmp/zone5/PANO-17602
+            echo "write complete: $(wc -c </tmp/zone5/PANO-17602) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'PANO-17602'
+  defchannel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/zone5
+      - run:
+          name: filter sha f6ee
+          command: |
+            mkdir -p /tmp/zone5
+            { set +o pipefail 2>/dev/null; awk -F: 'length($1) > 5 { print $1 " uses " $7 }' /etc/passwd |sort -k2 -n; true ; } > /tmp/zone5/BISON_OTTER_GLYPH_ATOM
+            echo "write complete: $(wc -c </tmp/zone5/BISON_OTTER_GLYPH_ATOM) B"
+      - persist_to_workspace:
+          root: /tmp/zone5
+          paths:
+            - 'BISON_OTTER_GLYPH_ATOM'
+workflows:
+  build:
+    jobs:
+      - hgf
+      - UXCW-2832-warning:
+          requires:
+            - hgf
+      - ensure-end-to-end-artifact-bundle:
+          requires:
+            - UXCW-2832-warning
+      - klushsisttaimd:
+          requires:
+            - UXCW-2832-warning
+      - k4:
+          requires:
+            - klushsisttaimd
+      - send-it:
+          requires:
+            - k4
+      - DDEQ-15745-src:
+          requires:
+            - k4
+      - fin_rec:
+          requires:
+            - DDEQ-15745-src
+      - b-3:
+          requires:
+            - fin_rec
+      - camera-otherGet:
+          requires:
+            - fin_rec
+      - cachedExports:
+          requires:
+            - camera-otherGet
+      - publish:
+          requires:
+            - cachedExports
+      - fk_shim:
+          requires:
+            - cachedExports
+      - d57:
+          requires:
+            - fk_shim
+      - intergration:
+          requires:
+            - d57
+      - CHAINtake:
+          requires:
+            - d57
+      - j0:
+          requires:
+            - CHAINtake
+      - deploy:
+          requires:
+            - j0
+      - alice-sandbox-chunk:
+          requires:
+            - j0
+      - fetchHTTPS:
+          requires:
+            - alice-sandbox-chunk
+      - Package_App7:
+          requires:
+            - fetchHTTPS
+      - oldParsers
+      - EnvCityId:
+          requires:
+            - oldParsers
+      - oct14-release:
+          requires:
+            - EnvCityId
+      - posT:
+          requires:
+            - EnvCityId
+      - has-index:
+          requires:
+            - posT
+      - q2-canary:
+          requires:
+            - has-index
+      - desert_-var:
+          requires:
+            - has-index
+      - lr0:
+          requires:
+            - desert_-var
+      - INFRA-448:
+          requires:
+            - lr0
+      - LResult:
+          requires:
+            - lr0
+      - deBuilder7:
+          requires:
+            - LResult
+      - apr10-cleanup:
+          requires:
+            - deBuilder7
+      - stalegradient:
+          requires:
+            - deBuilder7
+      - yolo:
+          requires:
+            - stalegradient
+      - fx-2:
+          requires:
+            - yolo
+      - DEPT-CHG-KEY:
+          requires:
+            - yolo
+      - do-string:
+          requires:
+            - DEPT-CHG-KEY
+      - API-28:
+          requires:
+            - do-string
+      - labelcolumn
+      - shippit:
+          requires:
+            - labelcolumn
+      - raw_time:
+          requires:
+            - labelcolumn
+      - canary-v1:
+          requires:
+            - raw_time
+      - MultiDepth:
+          requires:
+            - raw_time
+      - hotel:
+          requires:
+            - MultiDepth
+      - Gold460
+      - dump-2010:
+          requires:
+            - Gold460
+      - jess-build:
+          requires:
+            - dump-2010
+      - Done-Hot-Total:
+          requires:
+            - dump-2010
+      - mx48-qa:
+          requires:
+            - Done-Hot-Total
+      - gating:
+          requires:
+            - mx48-qa
+      - delete_transform:
+          requires:
+            - mx48-qa
+      - yrSalt:
+          requires:
+            - delete_transform
+      - go1-21-build:
+          requires:
+            - yrSalt
+      - recordCompareCb:
+          requires:
+            - yrSalt
+      - ep452:
+          requires:
+            - recordCompareCb
+      - tweak-router-v2-leak:
+          requires:
+            - ep452
+      - myBolt:
+          requires:
+            - ep452
+      - noWorker:
+          requires:
+            - myBolt
+      - cd-2a:
+          requires:
+            - noWorker
+      - cherry-trace-scope:
+          requires:
+            - noWorker
+      - LANG_MY:
+          requires:
+            - cherry-trace-scope
+      - nova:
+          requires:
+            - LANG_MY
+      - upsertouter:
+          requires:
+            - LANG_MY
+      - writer-grid-text-robot:
+          requires:
+            - upsertouter
+      - q3-rev:
+          requires:
+            - writer-grid-text-robot
+      - bool_str
+      - fillWithWave:
+          requires:
+            - bool_str
+      - Prepare_Suite5:
+          requires:
+            - fillWithWave
+      - Order-Motor-Iterator:
+          requires:
+            - fillWithWave
+      - map20051127:
+          requires:
+            - Order-Motor-Iterator
+      - Prepare_Service8:
+          requires:
+            - map20051127
+      - scarf_country_coffee_height:
+          requires:
+            - map20051127
+      - graph1:
+          requires:
+            - scarf_country_coffee_height
+      - validate-partial-regression-suite:
+          requires:
+            - graph1
+      - ian2003:
+          requires:
+            - graph1
+      - bg-yellow:
+          requires:
+            - ian2003
+      - b-new:
+          requires:
+            - bg-yellow
+      - Input2CNN:
+          requires:
+            - bg-yellow
+      - span-wolf:
+          requires:
+            - Input2CNN
+      - lima:
+          requires:
+            - span-wolf
+      - nav-servo:
+          requires:
+            - span-wolf
+      - orbit-normal:
+          requires:
+            - nav-servo
+      - INIT_DEV:
+          requires:
+            - orbit-normal
+      - clusterface:
+          requires:
+            - orbit-normal
+      - defchannel:
+          requires:
+            - clusterface
+      - promote:
+          requires:
+            - defchannel
